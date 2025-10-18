@@ -13,9 +13,11 @@
 // - format! 매크로를 사용할 수 있습니다: format!("{}{}", s1, s2)
 // - 또는 String의 push_str 메서드를 사용할 수 있습니다
 
-pub fn concatenate(s1: String, s2: String) -> String {
+pub fn concatenate(mut s1: String, s2: String) -> String {
     // TODO: 여기에 코드를 작성하세요
-    format!("{}{}", s1, s2)
+    // format!("{}{}", s1, s2)
+    s1.push_str(&s2);
+    s1
 }
 
 pub fn run() {
@@ -23,4 +25,5 @@ pub fn run() {
     let first = String::from("Hello, ");
     let second = String::from("Rust!");
     // TODO: concatenate 함수를 호출하고 결과를 출력하세요
+    println!("연결된 문자열: {}", concatenate(first, second));
 }

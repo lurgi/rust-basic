@@ -2,7 +2,9 @@ mod day1;
 mod day2;
 
 // 각 날짜별 전체 실행 함수 불러오기
+#[allow(unused_imports)]
 use day1::run_day1_exercises;
+#[allow(unused_imports)]
 use day2::run_day2_exercises;
 
 fn main() {

@@ -16,7 +16,12 @@
 
 pub fn filter_even_numbers(numbers: Vec<i32>) -> Vec<i32> {
     // TODO: 여기에 코드를 작성하세요
-    let result = Vec::new();
+    let mut result = Vec::new();
+    for x in numbers {
+        if x % 2 == 0 {
+            result.push(x);
+        }
+    }
     result
 }
 
@@ -25,4 +30,5 @@ pub fn run() {
     let numbers = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     // TODO: filter_even_numbers 함수를 호출하고 결과를 출력하세요
     // 힌트: 벡터 출력은 {:?} 포맷을 사용합니다
+    println!("짝수만 포함하는 벡터: {:?}", filter_even_numbers(numbers));
 }
