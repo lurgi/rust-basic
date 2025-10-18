@@ -1,48 +1,12 @@
-mod fibonacci;
-mod fizzbuzz;
-mod temperature;
+mod day1;
+mod day2;
 
-// 모듈에서 함수들을 직접 불러오기
-use fibonacci::fibonacci;
-use fizzbuzz::fizzbuzz;
-use temperature::{celsius_to_fahrenheit, fahrenheit_to_celsius};
-
-// 과제 1: 온도 변환기 실행
-#[allow(dead_code)]
-fn run_temperature_converter() {
-    println!("=== 과제 1: 온도 변환기 ===");
-    let celsius = 25.0;
-    let fahrenheit = 77.0;
-
-    // TODO: celsius_to_fahrenheit와 fahrenheit_to_celsius 함수를 호출하고 결과를 출력하세요
-    println!(
-        "{}°C = {}°F\n{}°F = {}°C",
-        celsius,
-        celsius_to_fahrenheit(celsius),
-        fahrenheit,
-        fahrenheit_to_celsius(fahrenheit)
-    );
-}
-
-// 과제 2: 피보나치 수열 실행
-#[allow(dead_code)]
-fn run_fibonacci() {
-    println!("=== 과제 2: 피보나치 수열 ===");
-    // TODO: 10번째 피보나치 수를 출력하세요
-    println!("10번째 피보나치 수 = {}", fibonacci(10));
-}
-
-// 과제 3: FizzBuzz 실행
-#[allow(dead_code)]
-fn run_fizzbuzz() {
-    println!("=== 과제 3: FizzBuzz ===");
-    // TODO: fizzbuzz 함수를 호출하세요
-    fizzbuzz(100);
-}
+// 각 날짜별 전체 실행 함수 불러오기
+use day1::run_day1_exercises;
+use day2::run_day2_exercises;
 
 fn main() {
     // 학습할 과제를 선택해서 실행하세요
-    // run_temperature_converter();
-    run_fibonacci();
-    // run_fizzbuzz();
+    // run_day1_exercises();
+    run_day2_exercises();
 }
