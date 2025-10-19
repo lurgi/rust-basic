@@ -17,7 +17,21 @@
 
 pub fn find_min_max(numbers: &Vec<i32>) -> (i32, i32) {
     // TODO: 여기에 코드를 작성하세요
-    (0, 0)
+    if numbers.is_empty() {
+        return (0, 0);
+    }
+
+    let mut min = numbers[0];
+    let mut max = numbers[0];
+    for &num in numbers {
+        if num < min {
+            min = num;
+        }
+        if num > max {
+            max = num;
+        }
+    }
+    (min, max)
 }
 
 pub fn run() {
@@ -25,4 +39,7 @@ pub fn run() {
     let numbers = vec![5, 2, 8, 1, 9, 3, 7];
     // TODO: find_min_max 함수를 호출하고 결과를 출력하세요
     // 함수 호출 후 numbers를 다시 사용해서 원본이 유지되는지 확인하세요
+    let (min, max) = find_min_max(&numbers);
+    println!("최솟값: {}, 최댓값: {}", min, max);
+    println!("원본 벡터: {:?}", numbers);
 }

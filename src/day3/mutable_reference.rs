@@ -17,6 +17,7 @@
 
 pub fn to_uppercase_inplace(s: &mut String) {
     // TODO: 여기에 코드를 작성하세요
+    *s = s.to_uppercase();
 }
 
 pub fn run() {
@@ -24,5 +25,6 @@ pub fn run() {
     let mut text = String::from("hello rust");
     println!("변경 전: {}", text);
     // TODO: to_uppercase_inplace 함수를 호출하세요
+    to_uppercase_inplace(&mut text);
     println!("변경 후: {}", text);
 }

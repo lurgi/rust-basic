@@ -17,7 +17,14 @@
 
 pub fn first_word_length(s: &String) -> usize {
     // TODO: 여기에 코드를 작성하세요
-    0
+
+    for (i, ch) in s.chars().enumerate() {
+        if ch == ' ' {
+            return i;
+        }
+    }
+
+    s.len()
 }
 
 pub fn run() {
@@ -25,4 +32,7 @@ pub fn run() {
     let sentence = String::from("Hello Rust Programming");
     // TODO: first_word_length 함수를 호출하고 결과를 출력하세요
     // 함수 호출 후 sentence를 다시 출력해서 원본이 유지되는지 확인하세요
+    let length = first_word_length(&sentence);
+    println!("첫 번째 단어의 길이: {}", length);
+    println!("원본 문자열: {}", sentence);
 }
