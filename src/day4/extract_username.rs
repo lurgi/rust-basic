@@ -23,7 +23,12 @@
 #[allow(dead_code)]
 fn extract_username(_email: &str) -> Option<&str> {
     // TODO: 여기에 코드를 작성하세요
-    None
+    let index = _email.find('@');
+    if index.is_some() {
+        return Some(&_email[0..index.unwrap()]);
+    } else {
+        return None;
+    }
 }
 
 pub fn run() {
@@ -32,10 +37,11 @@ pub fn run() {
     // TODO: extract_username 함수를 호출하고 결과를 출력하세요
     // 힌트: Option 출력은 {:?} 포맷을 사용하거나
     // match로 Some/None을 처리하세요
-
+    println!("{:?}", extract_username(_email1));
     let _email2 = "invalid-email";
     // TODO: '@'가 없는 경우도 테스트하세요
-
+    println!("{:?}", extract_username(_email2));
     let _email3 = "@example.com";
     // TODO: 사용자 이름이 빈 경우도 테스트하세요
+    println!("{:?}", extract_username(_email3));
 }

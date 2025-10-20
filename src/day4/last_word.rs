@@ -18,17 +18,18 @@
 #[allow(dead_code)]
 fn last_word(_s: &str) -> &str {
     // TODO: 여기에 코드를 작성하세요
-    ""
+    _s.split_whitespace().last().unwrap_or("")
 }
 
 pub fn run() {
     println!("=== 과제 1: 문자열 슬라이스 활용 ===");
     let _text = "Hello Rust Programming Language";
     // TODO: last_word 함수를 호출하고 결과를 출력하세요
-
+    println!("{}", last_word(_text));
     let _single_word = "Hello";
     // TODO: 단어가 하나인 경우도 테스트하세요
-
+    println!("{}", last_word(_single_word));
     let _empty = "";
     // TODO: 빈 문자열도 테스트하세요
+    println!("{}", last_word(_empty));
 }
