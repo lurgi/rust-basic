@@ -24,10 +24,20 @@ struct Point(f64, f64);
 // TODO: impl 블록에 메서드들을 구현하세요
 impl Point {
     // TODO: new 연관 함수
+    fn new(x: f64, y: f64) -> Point {
+        Point(x, y)
+    }
 
     // TODO: distance_from_origin 메서드
-
+    fn distance_from_origin(&self) -> f64 {
+        (self.0 * self.0 + self.1 * self.1).sqrt()
+    }
     // TODO: distance_to 메서드
+    fn distance_to(&self, other: &Point) -> f64 {
+        let &Point(x1, y1) = self;
+        let &Point(x2, y2) = other;
+        ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)).sqrt()
+    }
 }
 
 #[cfg(test)]
@@ -38,17 +48,25 @@ mod tests {
     #[test]
     fn test_point_creation() {
         // TODO: Point::new로 점을 생성하고 테스트하세요
+        let point = Point::new(3.0, 4.0);
+        assert_eq!(point.0, 3.0);
+        assert_eq!(point.1, 4.0);
     }
 
     #[test]
     fn test_distance_from_origin() {
         // TODO: distance_from_origin 메서드를 테스트하세요
         // 힌트: Point(3.0, 4.0)의 원점 거리는 5.0
+        let point = Point::new(3.0, 4.0);
+        assert_eq!(point.distance_from_origin(), 5.0);
     }
 
     #[test]
     fn test_distance_to() {
         // TODO: distance_to 메서드를 테스트하세요
+        let point1 = Point::new(3.0, 4.0);
+        let point2 = Point::new(0.0, 0.0);
+        assert_eq!(point1.distance_to(&point2), 5.0);
     }
 }
 
@@ -56,7 +74,13 @@ pub fn run() {
     println!("\n=== 과제 3: Point 튜플 구조체 ===");
     // TODO: Point 테스트
     // 1. Point::new(3.0, 4.0) 생성
+    let point = Point::new(3.0, 4.0);
     // 2. 원점으로부터의 거리 출력
+    println!("원점으로부터의 거리: {}", point.distance_from_origin());
     // 3. Point::new(0.0, 0.0) 생성
+    let point1 = Point::new(0.0, 0.0);
+    let point2 = Point::new(3.0, 4.0);
     // 4. 두 점 사이의 거리 출력
+    println!("두 점 사이의 거리: {}", point1.distance_to(&point2));
+    println!("두 점 사이의 거리: {}", point2.distance_to(&point1));
 }

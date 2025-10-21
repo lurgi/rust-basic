@@ -29,17 +29,42 @@
 #[derive(Debug)]
 struct Book {
     // TODO: 필드들을 정의하세요
+    title: String,
+    author: String,
+    pages: u32,
+    available: bool,
 }
 
 // TODO: impl 블록에 메서드들을 구현하세요
 impl Book {
     // TODO: new 연관 함수
+    fn new(title: String, author: String, pages: u32) -> Book {
+        Book {
+            title,
+            author,
+            pages,
+            available: true,
+        }
+    }
 
     // TODO: description 메서드
+    fn description(&self) -> String {
+        format!("{} by {} ({} pages)", self.title, self.author, self.pages)
+    }
 
     // TODO: borrow 메서드
+    fn borrow(&mut self) -> bool {
+        if self.available {
+            self.available = false;
+            return true;
+        }
+        false
+    }
 
     // TODO: return_book 메서드
+    fn return_book(&mut self) {
+        self.available = true;
+    }
 }
 
 #[cfg(test)]
@@ -50,21 +75,55 @@ mod tests {
     #[test]
     fn test_book_creation() {
         // TODO: Book::new로 책을 생성하고 테스트하세요
+        let book = Book::new(
+            String::from("The Rust Programming Language"),
+            String::from("Steve Klabnik"),
+            500,
+        );
+        assert_eq!(book.title, "The Rust Programming Language");
+        assert_eq!(book.author, "Steve Klabnik");
+        assert_eq!(book.pages, 500);
+        assert_eq!(book.available, true);
     }
 
     #[test]
     fn test_book_description() {
         // TODO: description 메서드를 테스트하세요
+        let book = Book::new(
+            String::from("The Rust Programming Language"),
+            String::from("Steve Klabnik"),
+            500,
+        );
+        assert_eq!(
+            book.description(),
+            "The Rust Programming Language by Steve Klabnik (500 pages)"
+        );
     }
 
     #[test]
     fn test_book_borrow() {
         // TODO: borrow 메서드를 테스트하세요
+        let mut book = Book::new(
+            String::from("The Rust Programming Language"),
+            String::from("Steve Klabnik"),
+            500,
+        );
+        assert_eq!(book.borrow(), true);
+        assert_eq!(book.available, false);
     }
 
     #[test]
     fn test_book_return() {
         // TODO: return_book 메서드를 테스트하세요
+        let mut book = Book::new(
+            String::from("The Rust Programming Language"),
+            String::from("Steve Klabnik"),
+            500,
+        );
+        assert_eq!(book.borrow(), true);
+        assert_eq!(book.available, false);
+        book.return_book();
+        assert_eq!(book.available, true);
     }
 }
 
@@ -72,9 +131,20 @@ pub fn run() {
     println!("=== 과제 1: Book 구조체 ===");
     // TODO: Book 테스트
     // 1. Book::new로 책 생성
+    let mut book = Book::new(
+        String::from("The Rust Programming Language"),
+        String::from("Steve Klabnik"),
+        500,
+    );
+    println!("{}", book.description());
     // 2. description 출력
+    println!("{}", book.description());
     // 3. borrow 호출하고 결과 출력
+    println!("{}", book.borrow());
     // 4. 다시 borrow 호출 (이미 대출 중)
+    println!("{}", book.borrow());
     // 5. return_book 호출
+    book.return_book();
     // 6. 다시 borrow 호출 (이제 가능)
+    println!("{}", book.borrow());
 }
