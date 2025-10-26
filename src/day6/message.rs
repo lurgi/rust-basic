@@ -25,21 +25,47 @@
 #[derive(Debug)]
 enum Message {
     // TODO: variant들을 정의하세요
+    Text(String),
+    Image {
+        url: String,
+        width: u32,
+        height: u32,
+    },
+    Video {
+        url: String,
+        duration: u32,
+    },
 }
 
 // TODO: process_message 함수를 구현하세요
 fn process_message(msg: &Message) {
     // TODO: match를 사용하여 구현
+    match msg {
+        Message::Text(text) => println!("텍스트 메시지: {}", text),
+        Message::Image { url, width, height } => println!("이미지 ({}x{}): {}", width, height, url),
+        Message::Video { url, duration } => println!("비디오 ({}초): {}", duration, url),
+    }
 }
 
 // TODO: filter_long_videos 함수를 구현하세요
 fn filter_long_videos(messages: Vec<Message>) -> Vec<Message> {
     // TODO: for 루프와 if let을 사용하여 구현
-    // 힌트: 
+    // 힌트:
     // - 빈 Vec를 만들고
     // - for 루프로 messages를 순회하면서
     // - if let으로 Video인지 확인하고
     // - duration이 60 이상이면 결과 Vec에 추가
+
+    let mut result: Vec<Message> = Vec::new();
+
+    for msg in messages {
+        if let Message::Video { duration, url: _ } = &msg {
+            if *duration > 60 {
+                result.push(msg);
+            }
+        }
+    }
+    result
 }
 
 #[cfg(test)]
@@ -50,16 +76,29 @@ mod tests {
     #[test]
     fn test_process_text() {
         // TODO: Text 메시지 처리를 테스트하세요
+        let text = Message::Text("Hello, Rust!".to_string());
+        process_message(&text);
     }
 
     #[test]
     fn test_process_image() {
         // TODO: Image 메시지 처리를 테스트하세요
+        let image = Message::Image {
+            url: "https://example.com/image.jpg".to_string(),
+            width: 100,
+            height: 100,
+        };
+        process_message(&image);
     }
 
     #[test]
     fn test_process_video() {
         // TODO: Video 메시지 처리를 테스트하세요
+        let video = Message::Video {
+            url: "https://example.com/video.mp4".to_string(),
+            duration: 120,
+        };
+        process_message(&video);
     }
 
     #[test]
@@ -67,6 +106,26 @@ mod tests {
         // TODO: filter_long_videos 함수를 테스트하세요
         // 짧은 비디오, 긴 비디오, 텍스트를 포함한 Vec를 만들고
         // 필터링 결과가 긴 비디오만 포함하는지 확인
+        let messages = vec![
+            Message::Video {
+                url: "https://example.com/video.mp4".to_string(),
+                duration: 120,
+            },
+            Message::Video {
+                url: "https://example.com/video.mp4".to_string(),
+                duration: 30,
+            },
+            Message::Text("Hello, Rust!".to_string()),
+        ];
+        let filtered = filter_long_videos(messages);
+        assert_eq!(filtered.len(), 1);
+        assert!(matches!(
+            filtered[0],
+            Message::Video {
+                duration: 120,
+                url: _
+            }
+        ));
     }
 }
 
@@ -81,5 +140,17 @@ pub fn run() {
     //    - 텍스트 메시지
     //    - 긴 비디오 (120초)
     // 4. 필터링된 결과 출력 (60초 이상 비디오만 나와야 함)
+    let text = Message::Text("Hello, Rust!".to_string());
+    let image = Message::Image {
+        url: "https://example.com/image.jpg".to_string(),
+        width: 100,
+        height: 100,
+    };
+    let video = Message::Video {
+        url: "https://example.com/video.mp4".to_string(),
+        duration: 120,
+    };
+    let messages = vec![text, image, video];
+    let filtered = filter_long_videos(messages);
+    println!("필터링된 결과: {:?}", filtered);
 }
-
