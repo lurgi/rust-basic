@@ -18,14 +18,29 @@ use std::collections::HashMap;
 
 // TODO: count_words 함수를 구현하세요
 fn count_words(_text: &str) -> HashMap<String, usize> {
-    // TODO
-    unimplemented!("count_words 함수를 구현하세요")
+    let mut word_map: HashMap<String, usize> = HashMap::new();
+
+    for word in _text.split_whitespace() {
+        let count = word_map.entry(word.to_lowercase()).or_insert(0);
+        *count += 1;
+    }
+
+    word_map
 }
 
 // TODO: find_most_frequent 함수를 구현하세요
 fn find_most_frequent(_word_counts: &HashMap<String, usize>) -> Option<(String, usize)> {
-    // TODO
-    unimplemented!("find_most_frequent 함수를 구현하세요")
+    if _word_counts.is_empty() {
+        return None;
+    }
+
+    let mut return_tuple: (String, usize) = (String::new(), 0);
+    for (word, count) in _word_counts {
+        if return_tuple.1 < *count {
+            return_tuple = (word.clone(), *count);
+        }
+    }
+    Some(return_tuple)
 }
 
 pub fn run() {

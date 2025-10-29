@@ -38,27 +38,37 @@ struct PhoneBook {
 impl PhoneBook {
     // TODO: new 메서드를 구현하세요
     fn new() -> PhoneBook {
-        unimplemented!("new 메서드를 구현하세요")
+        PhoneBook {
+            contacts: HashMap::new(),
+        }
     }
 
     // TODO: add 메서드를 구현하세요
     fn add(&mut self, _name: String, _phone: String) {
-        unimplemented!("add 메서드를 구현하세요")
+        self.contacts.insert(_name, _phone);
     }
 
     // TODO: get 메서드를 구현하세요
     fn get(&self, _name: &str) -> Option<&String> {
-        unimplemented!("get 메서드를 구현하세요")
+        self.contacts.get(_name)
     }
 
     // TODO: remove 메서드를 구현하세요
     fn remove(&mut self, _name: &str) -> bool {
-        unimplemented!("remove 메서드를 구현하세요")
+        self.contacts.remove(_name).is_some()
     }
 
     // TODO: list_all 메서드를 구현하세요
     fn list_all(&self) -> Vec<(&String, &String)> {
-        unimplemented!("list_all 메서드를 구현하세요")
+        let mut contacts_vec = Vec::new();
+
+        for (name, phone) in &self.contacts {
+            contacts_vec.push((name, phone));
+        }
+
+        contacts_vec
+
+        // or self.contacts.iter().collect()
     }
 }
 

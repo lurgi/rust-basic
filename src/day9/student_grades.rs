@@ -24,26 +24,54 @@
 
 // TODO: calculate_average 함수를 구현하세요
 fn calculate_average(_scores: &Vec<i32>) -> f64 {
-    // TODO
-    unimplemented!("calculate_average 함수를 구현하세요")
+    if _scores.len() == 0 {
+        return 0.0;
+    }
+
+    let sum: i32 = _scores.iter().sum();
+    sum as f64 / _scores.len() as f64
 }
 
 // TODO: find_highest 함수를 구현하세요
 fn find_highest(_scores: &Vec<i32>) -> Option<i32> {
-    // TODO
-    unimplemented!("find_highest 함수를 구현하세요")
+    if _scores.is_empty() {
+        return None;
+    }
+
+    let mut highest = _scores[0];
+    for &score in _scores {
+        if highest < score {
+            highest = score;
+        }
+    }
+    Some(highest)
 }
 
 // TODO: find_lowest 함수를 구현하세요
 fn find_lowest(_scores: &Vec<i32>) -> Option<i32> {
-    // TODO
-    unimplemented!("find_lowest 함수를 구현하세요")
+    if _scores.is_empty() {
+        return None;
+    }
+
+    let mut lowest = _scores[0];
+    for &score in _scores {
+        if lowest >= score {
+            lowest = score
+        }
+    }
+    Some(lowest)
 }
 
 // TODO: filter_passing 함수를 구현하세요
 fn filter_passing(_scores: &Vec<i32>, _passing_score: i32) -> Vec<i32> {
-    // TODO
-    unimplemented!("filter_passing 함수를 구현하세요")
+    let mut new_vec = Vec::new();
+
+    for &score in _scores {
+        if _passing_score < score {
+            new_vec.push(score)
+        }
+    }
+    new_vec
 }
 
 pub fn run() {
