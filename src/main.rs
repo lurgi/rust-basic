@@ -7,6 +7,7 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
+mod day10;
 
 // 각 날짜별 전체 실행 함수 불러오기
 #[allow(unused_imports)]
@@ -27,6 +28,8 @@ use day7::run_day7_exercises;
 use day8::run_day8_exercises;
 #[allow(unused_imports)]
 use day9::run_day9_exercises;
+#[allow(unused_imports)]
+use day10::run_day10_exercises;
 
 fn main() {
     // 학습할 과제를 선택해서 실행하세요
@@ -38,5 +41,6 @@ fn main() {
     // run_day6_exercises();
     // run_day7_exercises();
     // run_day8_exercises();
-    run_day9_exercises();
+    // run_day9_exercises();
+    run_day10_exercises();
 }
