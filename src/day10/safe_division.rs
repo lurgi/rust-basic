@@ -14,14 +14,18 @@
 
 // TODO: safe_divide_result 함수를 구현하세요
 fn safe_divide_result(_a: i32, _b: i32) -> Result<i32, String> {
-    // TODO
-    unimplemented!("safe_divide_result 함수를 구현하세요")
+    if _b == 0 {
+        return Err("0으로 나눌 수 없습니다".to_string());
+    }
+    Ok(_a / _b)
 }
 
 // TODO: safe_divide_option 함수를 구현하세요
 fn safe_divide_option(_a: i32, _b: i32) -> Option<i32> {
-    // TODO
-    unimplemented!("safe_divide_option 함수를 구현하세요")
+    if _b == 0 {
+        return None;
+    }
+    Some(_a / _b)
 }
 
 pub fn run() {

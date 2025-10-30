@@ -28,25 +28,37 @@
 // TODO: FileError 열거형을 정의하세요
 #[derive(Debug)]
 enum FileError {
-    // TODO
+    NotFound(String),
+    PermissionDenied(String),
+    InvalidFormat(String),
 }
 
 // TODO: read_file 함수를 구현하세요
 fn read_file(_filename: &str) -> Result<String, FileError> {
-    // TODO
-    unimplemented!("read_file 함수를 구현하세요")
+    match _filename {
+        "test.txt" => Ok("파일 내용입니다".to_string()),
+        "secret.txt" => Err(FileError::PermissionDenied("권한 없음".to_string())),
+        "data.csv" => Ok("1,2,3".to_string()),
+        _ => Err(FileError::NotFound("파일을 찾을 수 없음".to_string())),
+    }
 }
 
 // TODO: parse_csv 함수를 구현하세요
 fn parse_csv(_content: &str) -> Result<Vec<i32>, FileError> {
-    // TODO
-    unimplemented!("parse_csv 함수를 구현하세요")
+    _content
+        .split(",")
+        .map(|str| {
+            str.parse()
+                .map_err(|_| FileError::InvalidFormat("잘못된 형식".to_string()))
+        })
+        .collect()
 }
 
 // TODO: read_and_parse 함수를 구현하세요
 fn read_and_parse(_filename: &str) -> Result<Vec<i32>, FileError> {
-    // TODO
-    unimplemented!("read_and_parse 함수를 구현하세요")
+    // read_file(_filename).and_then(|content| parse_csv(&content))
+    let content = read_file(_filename)?;
+    parse_csv(&content)
 }
 
 pub fn run() {
@@ -74,4 +86,3 @@ pub fn run() {
         Err(e) => println!("에러: {:?}", e),
     }
 }
-

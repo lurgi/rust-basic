@@ -30,34 +30,45 @@
 // TODO: Student 구조체를 정의하세요
 #[derive(Debug)]
 struct Student {
-    // TODO
+    name: String,
+    age: u8,
+    grade: Option<char>,
 }
 
 // TODO: StudentRegistry 구조체를 정의하세요
 struct StudentRegistry {
-    // TODO
+    students: Vec<Student>,
 }
 
 // TODO: StudentRegistry의 impl 블록을 작성하세요
 impl StudentRegistry {
     // TODO: new 메서드를 구현하세요
     fn new() -> StudentRegistry {
-        unimplemented!("new 메서드를 구현하세요")
+        StudentRegistry {
+            students: Vec::new(),
+        }
     }
 
     // TODO: add_student 메서드를 구현하세요
     fn add_student(&mut self, _student: Student) {
-        unimplemented!("add_student 메서드를 구현하세요")
+        self.students.push(_student);
     }
 
     // TODO: find_by_name 메서드를 구현하세요
     fn find_by_name(&self, _name: &str) -> Option<&Student> {
-        unimplemented!("find_by_name 메서드를 구현하세요")
+        self.students.iter().find(|student| student.name == _name)
     }
 
     // TODO: get_grade 메서드를 구현하세요
     fn get_grade(&self, _name: &str) -> Option<char> {
-        unimplemented!("get_grade 메서드를 구현하세요")
+        // self.students.iter().find_map(|student| {
+        //     if student.name == _name {
+        //         return student.grade;
+        //     }
+        //     return None;
+        // })
+
+        self.find_by_name(_name).and_then(|student| student.grade)
     }
 }
 
