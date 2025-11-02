@@ -37,26 +37,56 @@
 #[derive(Debug)]
 enum DataError {
     // TODO: variant들을 추가하세요
+    ReadError(String),
+    ParseError(String),
+    ValidationError(String),
+    ProcessError(String),
 }
 
 // TODO: read_raw_data 함수를 구현하세요
 fn read_raw_data(_id: u32) -> Result<String, DataError> {
-    unimplemented!("read_raw_data 함수를 구현하세요")
+    match _id {
+        1 => {
+            return Ok(String::from("100,200,300"));
+        }
+        2 => {
+            return Ok(String::from("50,abc,150"));
+        }
+        3 => {
+            return Ok(String::from("10,20,30"));
+        }
+        _ => {
+            return Err(DataError::ReadError(String::from(
+                "데이터를 찾을 수 없습니다",
+            )));
+        }
+    }
 }
 
 // TODO: parse_numbers 함수를 구현하세요
 fn parse_numbers(_raw: &str) -> Result<Vec<i32>, DataError> {
-    unimplemented!("parse_numbers 함수를 구현하세요")
+    _raw.split(",")
+        .map(|str| str.parse())
+        .collect::<Result<Vec<i32>, _>>()
+        .map_err(|_| DataError::ParseError(String::from("파싱 실패")))
 }
 
 // TODO: validate_numbers 함수를 구현하세요
 fn validate_numbers(_numbers: &[i32]) -> Result<(), DataError> {
-    unimplemented!("validate_numbers 함수를 구현하세요")
+    if _numbers.iter().all(|&n| n > 0) {
+        return Ok(());
+    }
+    Err(DataError::ValidationError(String::from(
+        "양수만 허용됩니다",
+    )))
 }
 
 // TODO: calculate_average 함수를 구현하세요
 fn calculate_average(_numbers: &[i32]) -> Result<f64, DataError> {
-    unimplemented!("calculate_average 함수를 구현하세요")
+    if _numbers.is_empty() {
+        return Err(DataError::ProcessError(String::from("빈 배열입니다")));
+    }
+    Ok(_numbers.iter().fold(0.0, |acc, &x| acc + x as f64) / _numbers.len() as f64)
 }
 
 // TODO: process_data_pipeline 함수를 구현하세요
@@ -65,7 +95,10 @@ fn calculate_average(_numbers: &[i32]) -> Result<f64, DataError> {
 //      validate_numbers(&numbers)?;
 //      calculate_average(&numbers)
 fn process_data_pipeline(_id: u32) -> Result<f64, DataError> {
-    unimplemented!("process_data_pipeline 함수를 구현하세요")
+    let raw = read_raw_data(_id)?;
+    let numbers = parse_numbers(&raw)?;
+    validate_numbers(&numbers)?;
+    calculate_average(&numbers)
 }
 
 pub fn run() {

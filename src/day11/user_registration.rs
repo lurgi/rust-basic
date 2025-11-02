@@ -39,38 +39,66 @@
 // TODO: RegistrationError 열거형을 정의하세요
 #[derive(Debug)]
 enum RegistrationError {
-    // TODO: variant들을 추가하세요
+    InvalidEmail(String),
+    PasswordTooShort(usize),
+    UsernameTaken(String),
+    AgeRestriction(u8),
 }
 
 // TODO: User 구조체를 정의하세요
 #[allow(dead_code)]
 struct User {
-    // TODO: 필드들을 추가하세요
+    username: String,
+    email: String,
+    password: String,
+    age: u8,
 }
 
 // TODO: validate_email 함수를 구현하세요
 fn validate_email(_email: &str) -> Result<(), RegistrationError> {
-    unimplemented!("validate_email 함수를 구현하세요")
+    if _email.contains("@") {
+        return Ok(());
+    }
+    Err(RegistrationError::InvalidEmail(_email.to_string()))
 }
 
 // TODO: validate_password 함수를 구현하세요
 fn validate_password(_password: &str) -> Result<(), RegistrationError> {
-    unimplemented!("validate_password 함수를 구현하세요")
+    if _password.len() >= 8 {
+        return Ok(());
+    }
+    Err(RegistrationError::PasswordTooShort(_password.len()))
 }
 
 // TODO: validate_age 함수를 구현하세요
 fn validate_age(_age: u8) -> Result<(), RegistrationError> {
-    unimplemented!("validate_age 함수를 구현하세요")
+    if _age >= 14 {
+        return Ok(());
+    }
+    Err(RegistrationError::AgeRestriction(_age))
 }
 
 // TODO: register_user 함수를 구현하세요
+//   * 모든 검증을 통과하면 User 생성
+//   * ? 연산자를 사용하여 각 검증을 순차적으로 수행
+//   * 힌트: validate_email(email)?;
+//           validate_password(password)?;
+//           validate_age(age)?;
 fn register_user(
     _username: &str,
     _email: &str,
     _password: &str,
     _age: u8,
 ) -> Result<User, RegistrationError> {
-    unimplemented!("register_user 함수를 구현하세요")
+    validate_email(_email)?;
+    validate_password(_password)?;
+    validate_age(_age)?;
+    Ok(User {
+        username: String::from(_username),
+        email: String::from(_email),
+        password: String::from(_password),
+        age: _age,
+    })
 }
 
 pub fn run() {

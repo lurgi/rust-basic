@@ -25,17 +25,20 @@
 
 // TODO: safe_add 함수를 구현하세요
 fn safe_add(_a: i32, _b: i32) -> Result<i32, String> {
-    unimplemented!("safe_add 함수를 구현하세요")
+    _a.checked_add(_b)
+        .ok_or_else(|| String::from("덧셈 오버플로우"))
 }
 
 // TODO: safe_multiply 함수를 구현하세요
 fn safe_multiply(_a: i32, _b: i32) -> Result<i32, String> {
-    unimplemented!("safe_multiply 함수를 구현하세요")
+    _a.checked_mul(_b)
+        .ok_or_else(|| String::from("곱셈 오버플로우"))
 }
 
 // TODO: safe_divide 함수를 구현하세요
 fn safe_divide(_a: i32, _b: i32) -> Result<i32, String> {
-    unimplemented!("safe_divide 함수를 구현하세요")
+    _a.checked_div(_b)
+        .ok_or_else(|| String::from("0으로 나눌 수 없습니다"))
 }
 
 // TODO: calculate_formula 함수를 구현하세요
@@ -43,7 +46,9 @@ fn safe_divide(_a: i32, _b: i32) -> Result<i32, String> {
 //      let step2 = safe_multiply(step1, c)?;
 //      ...
 fn calculate_formula(_a: i32, _b: i32, _c: i32) -> Result<i32, String> {
-    unimplemented!("calculate_formula 함수를 구현하세요")
+    let step1 = safe_add(_a, _b)?;
+    let step2 = safe_multiply(step1, _c)?;
+    safe_divide(step2, 2)
 }
 
 pub fn run() {
