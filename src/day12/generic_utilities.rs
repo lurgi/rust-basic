@@ -24,22 +24,23 @@
 
 // TODO: print_type_and_value 함수를 구현하세요
 fn print_type_and_value<T: std::fmt::Debug>(_value: T) {
-    unimplemented!("print_type_and_value 함수를 구현하세요")
+    println!("type: {}", std::any::type_name::<T>());
+    println!("value: {:?}", _value);
 }
 
 // TODO: get_last 함수를 구현하세요
 fn get_last<T>(_list: &[T]) -> Option<&T> {
-    unimplemented!("get_last 함수를 구현하세요")
+    _list.last()
 }
 
 // TODO: swap_pair 함수를 구현하세요
 fn swap_pair<T>(_pair: (T, T)) -> (T, T) {
-    unimplemented!("swap_pair 함수를 구현하세요")
+    (_pair.1, _pair.0)
 }
 
 // TODO: find_index 함수를 구현하세요
 fn find_index<T: PartialEq>(_list: &[T], _target: &T) -> Option<usize> {
-    unimplemented!("find_index 함수를 구현하세요")
+    _list.iter().position(|x| x == _target)
 }
 
 pub fn run() {
@@ -74,5 +75,3 @@ pub fn run() {
         None => println!("찾을 수 없음"),
     }
 }
-
-

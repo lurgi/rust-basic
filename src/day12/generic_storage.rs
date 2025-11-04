@@ -41,34 +41,40 @@ struct Storage<T> {
 // TODO: impl<T> Storage<T> 블록을 구현하세요
 impl<T> Storage<T> {
     fn new() -> Storage<T> {
-        unimplemented!("new 메서드를 구현하세요")
+        Storage { items: Vec::new() }
     }
 
     fn add(&mut self, _item: T) {
-        unimplemented!("add 메서드를 구현하세요")
+        self.items.push(_item);
     }
 
     fn get(&self, _index: usize) -> Option<&T> {
-        unimplemented!("get 메서드를 구현하세요")
+        self.items.get(_index)
     }
 
     fn remove(&mut self, _index: usize) -> Option<T> {
-        unimplemented!("remove 메서드를 구현하세요")
+        if _index < self.items.len() {
+            Some(self.items.remove(_index))
+        } else {
+            None
+        }
     }
 
     fn len(&self) -> usize {
-        unimplemented!("len 메서드를 구현하세요")
+        self.items.len()
     }
 
     fn is_empty(&self) -> bool {
-        unimplemented!("is_empty 메서드를 구현하세요")
+        self.items.is_empty()
     }
 }
 
 // TODO: impl<T: std::fmt::Display> Storage<T> 블록을 구현하세요
 impl<T: std::fmt::Display> Storage<T> {
     fn display_all(&self) {
-        unimplemented!("display_all 메서드를 구현하세요")
+        for item in &self.items {
+            println!("{}", item)
+        }
     }
 }
 
@@ -106,5 +112,3 @@ pub fn run() {
     println!("제거 후 크기: {}", str_storage.len());
     str_storage.display_all();
 }
-
-

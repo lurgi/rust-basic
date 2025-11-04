@@ -36,29 +36,31 @@ struct Wrapper<T> {
 // TODO: impl<T> Wrapper<T> 블록을 구현하세요
 impl<T> Wrapper<T> {
     fn new(_value: T) -> Wrapper<T> {
-        unimplemented!("new 메서드를 구현하세요")
+        Wrapper { value: _value }
     }
 
     fn get(&self) -> &T {
-        unimplemented!("get 메서드를 구현하세요")
+        &self.value
     }
 
     fn unwrap(self) -> T {
-        unimplemented!("unwrap 메서드를 구현하세요")
+        self.value
     }
 
     fn map<U, F>(self, _f: F) -> Wrapper<U>
     where
         F: FnOnce(T) -> U,
     {
-        unimplemented!("map 메서드를 구현하세요")
+        Wrapper {
+            value: _f(self.value),
+        }
     }
 }
 
 // TODO: impl<T: std::fmt::Display> Wrapper<T> 블록을 구현하세요
 impl<T: std::fmt::Display> Wrapper<T> {
     fn display(&self) {
-        unimplemented!("display 메서드를 구현하세요")
+        println!("{}", self.value)
     }
 }
 
@@ -79,5 +81,3 @@ pub fn run() {
     let extracted = text.unwrap();
     println!("추출된 값: {}", extracted);
 }
-
-
