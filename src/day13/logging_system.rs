@@ -26,39 +26,68 @@
 //   - 각 메시지를 logger.log()로 기록
 
 // TODO: Logger 트레잇을 정의하세요
+trait Logger {
+    fn log(&self, message: &str);
+    fn log_error(&self, message: &str) {
+        self.log(&format!("[ERROR] {}", message))
+    }
+    fn log_info(&self, message: &str) {
+        self.log(&format!("[INFO] {}", message))
+    }
+}
 
 // TODO: ConsoleLogger 구조체를 정의하세요
-
+struct ConsoleLogger;
 // TODO: ConsoleLogger에 Logger 트레잇을 구현하세요
+impl Logger for ConsoleLogger {
+    fn log(&self, message: &str) {
+        println!("{}", message)
+    }
+}
 
 // TODO: FileLogger 구조체를 정의하세요
-
+struct FileLogger {
+    filename: String,
+}
 // TODO: FileLogger에 Logger 트레잇을 구현하세요
+impl Logger for FileLogger {
+    fn log(&self, message: &str) {
+        println!("파일 {}에 기록: {}", self.filename, message)
+    }
+}
 
 // TODO: log_multiple 함수를 구현하세요
+// - log_multiple<T: Logger>(logger: &T, messages: &[&str])
+//   - 여러 메시지를 한 번에 로깅
+//   - 각 메시지를 logger.log()로 기록
+fn log_multiple<T: Logger>(logger: &T, messages: &[&str]) {
+    for message in messages {
+        logger.log(&message)
+    }
+}
 
 pub fn run() {
     println!("=== 과제 3: 로깅 시스템 ===");
 
-    // let console_logger = ConsoleLogger;
-    // let file_logger = FileLogger {
-    //     filename: String::from("app.log"),
-    // };
+    let console_logger = ConsoleLogger;
+    let file_logger = FileLogger {
+        filename: String::from("app.log"),
+    };
 
-    // // ConsoleLogger 테스트
-    // println!("\n[ConsoleLogger 테스트]");
-    // console_logger.log("일반 메시지");
-    // console_logger.log_info("정보 메시지");
-    // console_logger.log_error("에러 발생!");
+    // ConsoleLogger 테스트
+    println!("\n[ConsoleLogger 테스트]");
+    console_logger.log("일반 메시지");
+    console_logger.log_info("정보 메시지");
+    console_logger.log_error("에러 발생!");
 
-    // // FileLogger 테스트
-    // println!("\n[FileLogger 테스트]");
-    // file_logger.log("일반 메시지");
-    // file_logger.log_info("정보 메시지");
-    // file_logger.log_error("에러 발생!");
+    // FileLogger 테스트
+    println!("\n[FileLogger 테스트]");
+    file_logger.log("일반 메시지");
+    file_logger.log_info("정보 메시지");
+    file_logger.log_error("에러 발생!");
 
-    // // log_multiple 테스트
-    // println!("\n[Multiple 로깅 테스트]");
-    // let messages = vec!["첫 번째 메시지", "두 번째 메시지", "세 번째 메시지"];
-    // log_multiple(&console_logger, &messages);
+    // log_multiple 테스트
+    println!("\n[Multiple 로깅 테스트]");
+    let messages = vec!["첫 번째 메시지", "두 번째 메시지", "세 번째 메시지"];
+    log_multiple(&console_logger, &messages);
 }

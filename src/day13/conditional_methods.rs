@@ -23,33 +23,57 @@
 //   - display(&self)
 //     * println!("Container: {}", self.value)
 
+use std::fmt::Display;
+
 // TODO: Container 구조체를 정의하세요
+struct Container<T> {
+    value: T,
+}
 
 // TODO: 모든 타입에 대한 impl 블록
+impl<T> Container<T> {
+    fn new(value: T) -> Container<T> {
+        Container { value }
+    }
+}
 
 // TODO: Clone 트레잇이 있는 타입에 대한 impl 블록
+impl<T: Clone> Container<T> {
+    fn duplicate(&self) -> (T, T) {
+        (self.value.clone(), self.value.clone())
+    }
+}
 
 // TODO: PartialOrd 트레잇이 있는 타입에 대한 impl 블록
+impl<T: PartialOrd> Container<T> {
+    fn is_greater_than(&self, other: &T) -> bool {
+        &self.value > other
+    }
+}
 
 // TODO: Display 트레잇이 있는 타입에 대한 impl 블록
+impl<T: Display> Container<T> {
+    fn display(&self) {
+        println!("Container: {}", self.value)
+    }
+}
 
 pub fn run() {
     println!("=== 과제 4: 조건부 메서드 ===");
 
-    // // i32는 Clone, PartialOrd, Display 모두 구현
-    // let num_container = Container::new(42);
-    // let (a, b) = num_container.duplicate();
-    // println!("복제된 값: {}, {}", a, b);
+    // i32는 Clone, PartialOrd, Display 모두 구현
+    let num_container = Container::new(42);
+    let (a, b) = num_container.duplicate();
+    println!("복제된 값: {}, {}", a, b);
 
-    // println!("10보다 큰가? {}", num_container.is_greater_than(&10));
-    // num_container.display();
+    println!("10보다 큰가? {}", num_container.is_greater_than(&10));
+    num_container.display();
 
-    // // String은 Clone과 Display 구현
-    // let str_container = Container::new(String::from("Hello"));
-    // let (s1, s2) = str_container.duplicate();
-    // println!("복제된 문자열: {}, {}", s1, s2);
-    // str_container.display();
+    // String은 Clone과 Display 구현
+    let str_container = Container::new(String::from("Hello"));
+    let (s1, s2) = str_container.duplicate();
+    println!("복제된 문자열: {}, {}", s1, s2);
+    str_container.display();
 
-    // // str_container.is_greater_than(&String::from("Hi")); // OK (String은 PartialOrd 구현)
+    str_container.is_greater_than(&String::from("Hi")); // OK (String은 PartialOrd 구현)
 }
-

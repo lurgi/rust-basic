@@ -23,44 +23,59 @@
 use std::fmt;
 
 // TODO: Product 구조체를 정의하세요 (derive 사용)
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+struct Product {
+    price: u32,
+    name: String,
+}
 
 // TODO: Display 트레잇을 구현하세요
+impl fmt::Display for Product {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}, {}원", self.name, self.price)
+    }
+}
 
 // TODO: find_cheapest 함수를 구현하세요
+fn find_cheapest<T: Ord>(items: &[T]) -> &T {
+    items.iter().min().unwrap()
+}
 
 // TODO: find_most_expensive 함수를 구현하세요
+fn find_most_expensive<T: Ord>(items: &[T]) -> &T {
+    items.iter().max().unwrap()
+}
 
 pub fn run() {
     println!("=== 과제 2: 비교 가능한 제품 ===");
 
-    // let products = vec![
-    //     Product {
-    //         name: String::from("키보드"),
-    //         price: 50000,
-    //     },
-    //     Product {
-    //         name: String::from("마우스"),
-    //         price: 30000,
-    //     },
-    //     Product {
-    //         name: String::from("모니터"),
-    //         price: 300000,
-    //     },
-    // ];
+    let products = vec![
+        Product {
+            name: String::from("키보드"),
+            price: 50000,
+        },
+        Product {
+            name: String::from("마우스"),
+            price: 30000,
+        },
+        Product {
+            name: String::from("모니터"),
+            price: 300000,
+        },
+    ];
 
-    // let cheapest = find_cheapest(&products);
-    // let most_expensive = find_most_expensive(&products);
+    let cheapest = find_cheapest(&products);
+    let most_expensive = find_most_expensive(&products);
 
-    // println!("가장 저렴한 제품: {}", cheapest);
-    // println!("가장 비싼 제품: {}", most_expensive);
+    println!("가장 저렴한 제품: {}", cheapest);
+    println!("가장 비싼 제품: {}", most_expensive);
 
-    // // Clone 테스트
-    // let cloned = cheapest.clone();
-    // println!("복제된 제품: {}", cloned);
+    // Clone 테스트
+    let cloned = cheapest.clone();
+    println!("복제된 제품: {}", cloned);
 
-    // // PartialEq 테스트
-    // if cheapest == &cloned {
-    //     println!("원본과 복제본이 같습니다");
-    // }
+    // PartialEq 테스트
+    if cheapest == &cloned {
+        println!("원본과 복제본이 같습니다");
+    }
 }
-
