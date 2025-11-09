@@ -3,6 +3,7 @@ mod day10;
 mod day11;
 mod day12;
 mod day13;
+mod day14;
 mod day2;
 mod day3;
 mod day4;
@@ -39,6 +40,8 @@ use day11::run_day11_exercises;
 use day12::run_day12_exercises;
 #[allow(unused_imports)]
 use day13::run_day13_exercises;
+#[allow(unused_imports)]
+use day14::run_day14_exercises;
 
 fn main() {
     // 학습할 과제를 선택해서 실행하세요
@@ -54,5 +57,6 @@ fn main() {
     // run_day10_exercises();
     // run_day11_exercises();
     // run_day12_exercises();
-    run_day13_exercises();
+    // run_day13_exercises();
+    run_day14_exercises();
 }
