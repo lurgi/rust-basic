@@ -64,76 +64,142 @@ fn advance_time(seconds: u64) {
 }
 
 // TODO: CacheError 열거형을 정의하세요
+#[derive(Debug)]
+enum CacheError {
+    NotFound(String),
+    Expired(String),
+}
 
 // TODO: Cacheable 트레잇을 정의하세요
+trait Cacheable {
+    fn is_valid(&self) -> bool;
+}
 
 // TODO: CachedValue 구조체를 정의하세요
+struct CachedValue<T> {
+    value: T,
+    created_at: u64,
+    ttl: u64,
+}
 
 // TODO: CachedValue에 Cacheable 트레잇을 구현하세요
+impl<T> Cacheable for CachedValue<T> {
+    fn is_valid(&self) -> bool {
+        self.created_at + self.ttl > get_current_time()
+    }
+}
 
 // TODO: Cache 구조체를 정의하세요
+struct Cache<T> {
+    data: HashMap<String, CachedValue<T>>,
+}
 
 // TODO: Cache의 모든 메서드를 구현하세요
+
+impl<T: Clone> Cache<T> {
+    fn new() -> Cache<T> {
+        Cache {
+            data: HashMap::new(),
+        }
+    }
+
+    fn set(&mut self, key: String, value: T, ttl: u64) {
+        self.data.insert(
+            key,
+            CachedValue {
+                value,
+                created_at: get_current_time(),
+                ttl,
+            },
+        );
+    }
+
+    fn get(&self, key: &str) -> Result<T, CacheError> {
+        match self.data.get(key) {
+            Some(cached_value) => {
+                if cached_value.is_valid() {
+                    Ok(cached_value.value.clone())
+                } else {
+                    Err(CacheError::Expired(key.to_string()))
+                }
+            }
+            None => Err(CacheError::NotFound(key.to_string())),
+        }
+    }
+
+    fn remove(&mut self, key: &str) -> Result<T, CacheError> {
+        match self.data.remove(key) {
+            Some(cached_value) => {
+                if cached_value.is_valid() {
+                    Ok(cached_value.value.clone())
+                } else {
+                    Err(CacheError::Expired(key.to_string()))
+                }
+            }
+            None => Err(CacheError::NotFound(String::from(key))),
+        }
+    }
+
+    fn clear(&mut self) {
+        self.data.clear();
+    }
+
+    fn size(&self) -> usize {
+        self.data.len()
+    }
+}
 
 pub fn run() {
     println!("=== 통합 과제 2: 제네릭 캐시 시스템 ===\n");
 
-    // let mut cache: Cache<String> = Cache::new();
+    let mut cache: Cache<String> = Cache::new();
 
-    // // 캐시에 값 저장 (TTL: 10초)
-    // cache.set(
-    //     String::from("user_1"),
-    //     String::from("Alice"),
-    //     10,
-    // );
+    // 캐시에 값 저장 (TTL: 10초)
+    cache.set(String::from("user_1"), String::from("Alice"), 10);
 
-    // cache.set(
-    //     String::from("user_2"),
-    //     String::from("Bob"),
-    //     5,
-    // );
+    cache.set(String::from("user_2"), String::from("Bob"), 5);
 
-    // println!("캐시 크기: {}", cache.size());
+    println!("캐시 크기: {}", cache.size());
 
-    // // 값 가져오기
-    // match cache.get("user_1") {
-    //     Ok(value) => println!("user_1: {}", value),
-    //     Err(e) => println!("에러: {:?}", e),
-    // }
+    // 값 가져오기
+    match cache.get("user_1") {
+        Ok(value) => println!("user_1: {}", value),
+        Err(e) => println!("에러: {:?}", e),
+    }
 
-    // // 5초 경과
-    // advance_time(5);
-    // println!("\n5초 경과...");
+    // 5초 경과
+    advance_time(5);
+    println!("\n5초 경과...");
 
-    // // user_2는 만료됨 (TTL: 5초)
-    // match cache.get("user_2") {
-    //     Ok(value) => println!("user_2: {}", value),
-    //     Err(e) => println!("에러: {:?}", e),
-    // }
+    // user_2는 만료됨 (TTL: 5초)
+    match cache.get("user_2") {
+        Ok(value) => println!("user_2: {}", value),
+        Err(e) => println!("에러: {:?}", e),
+    }
 
-    // // user_1은 여전히 유효 (TTL: 10초, 경과: 5초)
-    // match cache.get("user_1") {
-    //     Ok(value) => println!("user_1: {}", value),
-    //     Err(e) => println!("에러: {:?}", e),
-    // }
+    // user_1은 여전히 유효 (TTL: 10초, 경과: 5초)
+    match cache.get("user_1") {
+        Ok(value) => println!("user_1: {}", value),
+        Err(e) => println!("에러: {:?}", e),
+    }
 
-    // // 6초 더 경과 (총 11초)
-    // advance_time(6);
-    // println!("\n6초 더 경과... (총 11초)");
+    // 6초 더 경과 (총 11초)
+    advance_time(6);
+    println!("\n6초 더 경과... (총 11초)");
 
-    // // user_1도 만료됨 (TTL: 10초, 경과: 11초)
-    // match cache.get("user_1") {
-    //     Ok(value) => println!("user_1: {}", value),
-    //     Err(e) => println!("에러: {:?}", e),
-    // }
+    // user_1도 만료됨 (TTL: 10초, 경과: 11초)
+    match cache.get("user_1") {
+        Ok(value) => println!("user_1: {}", value),
+        Err(e) => println!("에러: {:?}", e),
+    }
 
-    // // 새 값 추가
-    // cache.set(String::from("user_3"), String::from("Charlie"), 20);
+    // 새 값 추가
+    cache.set(String::from("user_3"), String::from("Charlie"), 20);
 
-    // println!("\n캐시 크기: {}", cache.size());
+    println!("\n캐시 크기: {}", cache.size());
 
-    // // 캐시 비우기
-    // cache.clear();
-    // println!("캐시 비움");
-    // println!("캐시 크기: {}", cache.size());
+    // 캐시 비우기
+    cache.clear();
+    println!("캐시 비움");
+    println!("캐시 크기: {}", cache.size());
 }
