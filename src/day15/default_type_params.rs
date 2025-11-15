@@ -19,28 +19,52 @@
 //   - display(&self)
 //     * "({}, {})" 형식으로 출력
 
-use std::ops::Add;
+use std::{ops::Add, thread::sleep};
 
 // TODO: Point 구조체를 정의하세요 (기본 타입 매개변수 사용)
+struct Point<T = i32> {
+    x: T,
+    y: T,
+}
 
 // TODO: 모든 타입에 대한 impl 블록 (new 메서드)
+impl<T> Point<T> {
+    fn new(x: T, y: T) -> Point<T> {
+        Point { x, y }
+    }
+}
 
 // TODO: Point<i32>에 대한 Add 트레잇 구현
+impl Add for Point<i32> {
+    type Output = Point;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Point {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
 
 // TODO: Display 트레잇이 있는 타입에 대한 impl 블록 (display 메서드)
+impl<T: std::fmt::Display> Point<T> {
+    fn display(&self) {
+        println!("({}, {})", self.x, self.y)
+    }
+}
 
 pub fn run() {
     println!("=== 과제 2: 기본 타입 매개변수로 포인트 연산 ===");
 
-    // // 기본 타입(i32) 사용
-    // let p1 = Point::new(1, 2);
-    // let p2 = Point::new(3, 4);
-    // let p3 = p1 + p2;
-    // p3.display();
+    // 기본 타입(i32) 사용
+    let p1 = Point::new(1, 2);
+    let p2 = Point::new(3, 4);
+    let p3 = p1 + p2;
+    p3.display();
 
-    // // 다른 타입(f64) 사용
-    // let p4 = Point::new(1.5, 2.5);
-    // let p5 = Point::new(3.5, 4.5);
-    // p4.display();
-    // p5.display();
+    // 다른 타입(f64) 사용
+    let p4 = Point::new(1.5, 2.5);
+    let p5 = Point::new(3.5, 4.5);
+    p4.display();
+    p5.display();
 }

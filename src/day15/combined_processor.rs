@@ -31,35 +31,68 @@
 // 대신 각 프로세서를 개별적으로 사용하는 방식으로 구현하세요.
 
 // TODO: Processor 트레잇을 정의하세요 (연관 타입 포함)
+trait Processor {
+    type Input;
+    type Output;
+
+    fn process(&self, input: Self::Input) -> Self::Output;
+}
 
 // TODO: UppercaseProcessor 구조체를 정의하세요
+struct UppercaseProcessor;
 
 // TODO: UppercaseProcessor에 Processor 트레잇을 구현하세요
+impl Processor for UppercaseProcessor {
+    type Input = String;
+    type Output = String;
+
+    fn process(&self, input: Self::Input) -> Self::Output {
+        input.to_uppercase()
+    }
+}
 
 // TODO: LengthProcessor 구조체를 정의하세요
+struct LengthProcessor;
 
 // TODO: LengthProcessor에 Processor 트레잇을 구현하세요
+impl Processor for LengthProcessor {
+    type Input = String;
+    type Output = usize;
+
+    fn process(&self, input: Self::Input) -> Self::Output {
+        input.len()
+    }
+}
 
 // TODO: DoubleProcessor 구조체를 정의하세요
+struct DoubleProcessor;
 
 // TODO: DoubleProcessor에 Processor 트레잇을 구현하세요
+impl Processor for DoubleProcessor {
+    type Input = i32;
+    type Output = i32;
+
+    fn process(&self, input: Self::Input) -> Self::Output {
+        input * 2
+    }
+}
 
 pub fn run() {
     println!("=== 과제 4: 연관 타입과 트레잇 객체 결합 ===");
 
-    // let uppercase = UppercaseProcessor;
-    // let length = LengthProcessor;
-    // let double = DoubleProcessor;
+    let uppercase = UppercaseProcessor;
+    let length = LengthProcessor;
+    let double = DoubleProcessor;
 
-    // // UppercaseProcessor 테스트
-    // let result = uppercase.process(String::from("hello"));
-    // println!("대문자 변환: {}", result);
+    // UppercaseProcessor 테스트
+    let result = uppercase.process(String::from("hello"));
+    println!("대문자 변환: {}", result);
 
-    // // LengthProcessor 테스트
-    // let result = length.process(String::from("hello world"));
-    // println!("문자열 길이: {}", result);
+    // LengthProcessor 테스트
+    let result = length.process(String::from("hello world"));
+    println!("문자열 길이: {}", result);
 
-    // // DoubleProcessor 테스트
-    // let result = double.process(21);
-    // println!("2배 만들기: {}", result);
+    // DoubleProcessor 테스트
+    let result = double.process(21);
+    println!("2배 만들기: {}", result);
 }
