@@ -25,26 +25,50 @@
 //   * body의 생명주기는 무관 ('_로 생략)
 
 // TODO: Context 구조체를 정의하세요
+struct Context<'a, 'b> {
+    title: &'a str,
+    body: &'b str,
+}
 
 // TODO: Context의 모든 메서드를 구현하세요
+impl<'a, 'b> Context<'a, 'b> {
+    fn new(title: &'a str, body: &'b str) -> Context<'a, 'b> {
+        Context { title, body }
+    }
+
+    fn title(&self) -> &'a str {
+        self.title
+    }
+
+    fn body(&self) -> &'b str {
+        self.body
+    }
+
+    fn display(&self) {
+        println!("제목: {}\n내용: {}", self.title, self.body)
+    }
+}
 
 // TODO: create_summary 함수를 구현하세요
+fn create_summary<'a>(ctx: &Context<'a, '_>) -> &'a str {
+    ctx.title()
+}
 
 pub fn run() {
-    // println!("=== 과제 3: 복잡한 생명주기 관계 ===");
+    println!("=== 과제 3: 복잡한 생명주기 관계 ===");
 
-    // let title = String::from("Rust 프로그래밍");
+    let title = String::from("Rust 프로그래밍");
 
-    // {
-    //     let body = String::from("생명주기는 참조의 유효 범위를 나타냅니다.");
-    //     let ctx = Context::new(&title, &body);
+    {
+        let body = String::from("생명주기는 참조의 유효 범위를 나타냅니다.");
+        let ctx = Context::new(&title, &body);
 
-    //     ctx.display();
+        ctx.display();
 
-    //     let summary = create_summary(&ctx);
-    //     println!("\n요약: {}", summary);
-    // } // body는 여기서 해제
+        let summary = create_summary(&ctx);
+        println!("\n요약: {}", summary);
+    } // body는 여기서 해제
 
-    // // title은 여전히 유효
-    // println!("\n제목은 여전히 유효: {}", title);
+    // title은 여전히 유효
+    println!("\n제목은 여전히 유효: {}", title);
 }
