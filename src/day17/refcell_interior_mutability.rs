@@ -25,23 +25,46 @@
 use std::cell::RefCell;
 
 // TODO: Counter 구조체를 정의하세요
+struct Counter {
+    count: RefCell<i32>,
+}
 
 // TODO: Counter의 모든 메서드를 구현하세요
+impl Counter {
+    fn new() -> Counter {
+        Counter {
+            count: RefCell::new(0),
+        }
+    }
+
+    fn increment(&self) {
+        let mut count = self.count.borrow_mut();
+        *count = *count + 1;
+    }
+
+    fn get(&self) -> i32 {
+        *self.count.borrow()
+    }
+    //
+    fn reset(&self) {
+        *self.count.borrow_mut() = 0
+    }
+}
 
 pub fn run() {
-    // println!("=== 과제 3: RefCell로 내부 가변성 구현 ===");
+    println!("=== 과제 3: RefCell로 내부 가변성 구현 ===");
 
-    // let counter = Counter::new();
+    let counter = Counter::new();
 
-    // println!("초기 값: {}", counter.get());
+    println!("초기 값: {}", counter.get());
 
-    // // &self만 받지만 내부 값 변경 가능
-    // counter.increment();
-    // counter.increment();
-    // counter.increment();
+    // &self만 받지만 내부 값 변경 가능
+    counter.increment();
+    counter.increment();
+    counter.increment();
 
-    // println!("증가 후: {}", counter.get());
+    println!("증가 후: {}", counter.get());
 
-    // counter.reset();
-    // println!("리셋 후: {}", counter.get());
+    counter.reset();
+    println!("리셋 후: {}", counter.get());
 }

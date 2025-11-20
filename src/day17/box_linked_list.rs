@@ -27,14 +27,43 @@
 //     * "1 -> 2 -> 3 -> Nil" 형식으로 문자열 생성
 
 // TODO: List 열거형을 정의하세요
+enum List {
+    Cons(i32, Box<List>),
+    Nil,
+}
 
 // TODO: List의 모든 메서드를 구현하세요
+impl List {
+    fn new() -> List {
+        List::Nil
+    }
+
+    fn prepend(self, value: i32) -> List {
+        List::Cons(value, Box::new(self))
+    }
+
+    fn len(&self) -> usize {
+        match self {
+            List::Cons(_, next) => 1 + next.len(),
+            List::Nil => 0,
+        }
+    }
+
+    fn stringify(&self) -> String {
+        match self {
+            List::Cons(value, next) => {
+                format!("{} -> {}", value, next.stringify())
+            }
+            List::Nil => "Nil".to_string(),
+        }
+    }
+}
 
 pub fn run() {
-    // println!("=== 과제 1: Box로 연결 리스트 만들기 ===");
+    println!("=== 과제 1: Box로 연결 리스트 만들기 ===");
 
-    // let list = List::new().prepend(3).prepend(2).prepend(1);
+    let list = List::new().prepend(3).prepend(2).prepend(1);
 
-    // println!("리스트: {}", list.stringify());
-    // println!("길이: {}", list.len());
+    println!("리스트: {}", list.stringify());
+    println!("길이: {}", list.len());
 }

@@ -17,3 +17,4 @@ pub fn run_day17_exercises() {
 
     rc_refcell_shared_mutable::run();
 }
+
