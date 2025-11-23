@@ -26,23 +26,59 @@ use std::sync::mpsc;
 use std::thread;
 
 // TODO: Task 구조체를 정의하세요
+struct Task {
+    id: u32,
+    payload: String,
+}
 
 // TODO: TaskResult 구조체를 정의하세요
+struct TaskResult {
+    task_id: u32,
+    result: String,
+}
 
 // TODO: process_tasks 함수를 구현하세요
+fn process_tasks(tasks: Vec<Task>) -> Vec<TaskResult> {
+    let (tx, rx) = mpsc::channel();
+    let num_tasks = tasks.len();
+
+    for task in tasks {
+        let tx_cloned = tx.clone();
+        thread::spawn(move || {
+            tx_cloned
+                .send(TaskResult {
+                    task_id: task.id,
+                    result: task.payload.to_uppercase(),
+                })
+                .unwrap();
+        });
+    }
+
+    drop(tx);
+    rx.iter().take(num_tasks).collect()
+}
 
 pub fn run() {
     println!("=== 과제 2: 채널로 메시지 전달 ===");
 
-    // let tasks = vec![
-    //     Task { id: 1, payload: String::from("hello") },
-    //     Task { id: 2, payload: String::from("world") },
-    //     Task { id: 3, payload: String::from("rust") },
-    // ];
+    let tasks = vec![
+        Task {
+            id: 1,
+            payload: String::from("hello"),
+        },
+        Task {
+            id: 2,
+            payload: String::from("world"),
+        },
+        Task {
+            id: 3,
+            payload: String::from("rust"),
+        },
+    ];
 
-    // let results = process_tasks(tasks);
+    let results = process_tasks(tasks);
 
-    // for result in results {
-    //     println!("Task {}: {}", result.task_id, result.result);
-    // }
+    for result in results {
+        println!("Task {}: {}", result.task_id, result.result);
+    }
 }

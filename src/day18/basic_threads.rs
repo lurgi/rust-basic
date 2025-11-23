@@ -17,15 +17,27 @@ use std::thread;
 use std::time::Duration;
 
 // TODO: create_threads 함수를 구현하세요
+fn create_threads(count: u32) -> Vec<thread::JoinHandle<u32>> {
+    let mut threads = Vec::new();
+
+    for i in 0..count {
+        threads.push(thread::spawn(move || i));
+    }
+
+    threads
+}
 
 // TODO: wait_all 함수를 구현하세요
+fn wait_all(handles: Vec<thread::JoinHandle<u32>>) -> Vec<u32> {
+    handles.into_iter().map(|h| h.join().unwrap()).collect()
+}
 
 pub fn run() {
     println!("=== 과제 1: 기본 스레드 생성 ===");
 
-    // let handles = create_threads(5);
-    // println!("5개의 스레드 생성됨");
+    let handles = create_threads(5);
+    println!("5개의 스레드 생성됨");
 
-    // let results = wait_all(handles);
-    // println!("스레드 결과: {:?}", results);
+    let results = wait_all(handles);
+    println!("스레드 결과: {:?}", results);
 }
