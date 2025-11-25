@@ -21,25 +21,40 @@
 //           futures::future::join_all(futures).await
 //   * 또는 간단히 반복문으로 futures를 모아서 await
 
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 
 // TODO: Data 구조체를 정의하세요
+struct Data {
+    id: u32,
+    value: String,
+}
 
 // TODO: fetch_data 함수를 구현하세요
+async fn fetch_data(id: u32) -> Data {
+    sleep(Duration::from_millis(id as u64 * 50)).await;
+    Data {
+        id,
+        value: format!("Data {}", id),
+    }
+}
 
 // TODO: fetch_all 함수를 구현하세요
+async fn fetch_all(ids: Vec<u32>) -> Vec<Data> {
+    let futures: Vec<_> = ids.into_iter().map(|id| fetch_data(id)).collect();
+
+    futures::future::join_all(futures).await
+}
 
 pub async fn run() {
     println!("=== 과제 4: 비동기 데이터 수집 ===");
 
-    // let ids = vec![1, 2, 3, 4, 5];
+    let ids = vec![1, 2, 3, 4, 5];
 
-    // let start = std::time::Instant::now();
-    // let data = fetch_all(ids).await;
-    // println!("수집 완료 (소요 시간: {:?})", start.elapsed());
+    let start = std::time::Instant::now();
+    let data = fetch_all(ids).await;
+    println!("수집 완료 (소요 시간: {:?})", start.elapsed());
 
-    // for item in data {
-    //     println!("  ID {}: {}", item.id, item.value);
-    // }
+    for item in data {
+        println!("  ID {}: {}", item.id, item.value);
+    }
 }
-

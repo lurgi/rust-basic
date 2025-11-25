@@ -21,30 +21,47 @@
 //   * 힌트: futures::future::join_all 사용
 //           또는 tokio::spawn으로 각각 실행 후 결과 수집
 
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 
 // TODO: process_step 함수를 구현하세요
+async fn process_step(step: u32, delay: u64) -> String {
+    sleep(Duration::from_millis(delay)).await;
+    format!("Step {} 완료", step)
+}
 
 // TODO: process_pipeline 함수를 구현하세요
+async fn process_pipeline(steps: Vec<u32>) -> Vec<String> {
+    let mut results = Vec::new();
+    for step in steps {
+        results.push(process_step(step, 100).await);
+    }
+    results
+}
 
 // TODO: process_all_parallel 함수를 구현하세요
-// 힌트: 간단한 방법은 futures를 벡터에 모아서 반복문으로 await
-// 또는 tokio::spawn을 사용
+async fn process_all_parallel(steps: Vec<u32>) -> Vec<String> {
+    let futures: Vec<_> = steps
+        .into_iter()
+        .map(|step| process_step(step, 100))
+        .collect();
+
+    futures::future::join_all(futures).await
+}
 
 pub async fn run() {
     println!("=== 과제 2: Future 조합 ===");
 
-    // let steps = vec![1, 2, 3, 4, 5];
+    let steps = vec![1, 2, 3, 4, 5];
 
-    // println!("순차 처리:");
-    // let start = std::time::Instant::now();
-    // let results = process_pipeline(steps.clone()).await;
-    // println!("결과: {:?}", results);
-    // println!("소요 시간: {:?}", start.elapsed());
+    println!("순차 처리:");
+    let start = std::time::Instant::now();
+    let results = process_pipeline(steps.clone()).await;
+    println!("결과: {:?}", results);
+    println!("소요 시간: {:?}", start.elapsed());
 
-    // println!("\n병렬 처리:");
-    // let start = std::time::Instant::now();
-    // let results = process_all_parallel(steps).await;
-    // println!("결과: {:?}", results);
-    // println!("소요 시간: {:?}", start.elapsed());
+    println!("\n병렬 처리:");
+    let start = std::time::Instant::now();
+    let results = process_all_parallel(steps).await;
+    println!("결과: {:?}", results);
+    println!("소요 시간: {:?}", start.elapsed());
 }

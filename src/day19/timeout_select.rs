@@ -20,33 +20,51 @@
 //               result = slow_operation(task2_delay) => format!("Task 2: {}", result),
 //           }
 
-use tokio::time::{sleep, Duration, timeout};
+use tokio::time::{Duration, sleep, timeout};
 
 // TODO: slow_operation 함수를 구현하세요
+async fn slow_operation(duration: u64) -> String {
+    sleep(Duration::from_millis(duration)).await;
+    "완료".to_string()
+}
 
 // TODO: with_timeout 함수를 구현하세요
+async fn with_timeout(duration: u64, timeout_ms: u64) -> Result<String, String> {
+    let result = timeout(Duration::from_millis(timeout_ms), slow_operation(duration)).await;
+
+    match result {
+        Ok(val) => Ok(val),
+        Err(_) => Err("타임아웃".to_string()),
+    }
+}
 
 // TODO: race_tasks 함수를 구현하세요
+async fn race_tasks(task1_delay: u64, task2_delay: u64) -> String {
+    tokio::select! {
+        result = slow_operation(task1_delay) => format!("Task 1: {}", result),
+        result = slow_operation(task2_delay) => format!("Task 2: {}", result),
+    }
+}
 
 pub async fn run() {
     println!("=== 과제 3: 타임아웃과 select ===");
 
-    // // 성공 케이스
-    // match with_timeout(500, 1000).await {
-    //     Ok(result) => println!("성공: {}", result),
-    //     Err(e) => println!("에러: {}", e),
-    // }
+    // 성공 케이스
+    match with_timeout(500, 1000).await {
+        Ok(result) => println!("성공: {}", result),
+        Err(e) => println!("에러: {}", e),
+    }
 
-    // // 타임아웃 케이스
-    // match with_timeout(1500, 1000).await {
-    //     Ok(result) => println!("성공: {}", result),
-    //     Err(e) => println!("에러: {}", e),
-    // }
+    // 타임아웃 케이스
+    match with_timeout(1500, 1000).await {
+        Ok(result) => println!("성공: {}", result),
+        Err(e) => println!("에러: {}", e),
+    }
 
-    // // 레이스
-    // let winner = race_tasks(500, 1000).await;
-    // println!("승자: {}", winner);
+    // 레이스
+    let winner = race_tasks(500, 1000).await;
+    println!("승자: {}", winner);
 
-    // let winner = race_tasks(1000, 500).await;
-    // println!("승자: {}", winner);
+    let winner = race_tasks(1000, 500).await;
+    println!("승자: {}", winner);
 }
