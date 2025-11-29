@@ -30,56 +30,114 @@
 //   * 모든 URL을 병렬로 요청 (tokio::spawn 사용)
 //   * 모든 결과 수집
 
+use std::sync::Arc;
 use tokio::time::{Duration, sleep};
 
 // TODO: ApiResponse 구조체를 정의하세요
+struct ApiResponse {
+    status: u16,
+    body: String,
+}
 
 // TODO: HttpClient 구조체를 정의하세요
+struct HttpClient;
 
 // TODO: HttpClient의 모든 메서드를 구현하세요
+impl HttpClient {
+    fn new() -> HttpClient {
+        HttpClient
+    }
+
+    async fn get(&self, url: &str) -> Result<ApiResponse, String> {
+        if url.contains("error") {
+            Err("error".to_string())
+        } else {
+            sleep(Duration::from_millis(100)).await;
+            Ok(ApiResponse {
+                status: 200,
+                body: format!("Response from {}", url),
+            })
+        }
+    }
+
+    async fn post(&self, url: &str, body: &str) -> Result<ApiResponse, String> {
+        if url.contains("error") {
+            Err("error".to_string())
+        } else if body.is_empty() {
+            Err("빈 body".to_string())
+        } else {
+            sleep(Duration::from_millis(150)).await;
+            Ok(ApiResponse {
+                status: 201,
+                body: format!("Created: {}", body),
+            })
+        }
+    }
+}
 
 // TODO: fetch_multiple 함수를 구현하세요
+async fn fetch_multiple(urls: Vec<String>) -> Vec<Result<ApiResponse, String>> {
+    let client = Arc::new(HttpClient::new());
+    let mut handles = Vec::new();
+
+    for url in urls {
+        let client = Arc::clone(&client);
+        let handle = tokio::spawn(async move { client.get(&url).await });
+        handles.push(handle);
+    }
+
+    let mut results = Vec::new();
+
+    for handle in handles {
+        results.push(handle.await.unwrap());
+    }
+
+    results
+}
 
 pub async fn run() {
     println!("=== 과제 3: HTTP 클라이언트 시뮬레이터 ===");
 
-    // let client = HttpClient::new();
+    let client = HttpClient::new();
 
-    // // GET 요청
-    // match client.get("https://api.example.com/users").await {
-    //     Ok(response) => println!("GET 성공 ({}): {}", response.status, response.body),
-    //     Err(e) => println!("GET 실패: {}", e),
-    // }
+    // GET 요청
+    match client.get("https://api.example.com/users").await {
+        Ok(response) => println!("GET 성공 ({}): {}", response.status, response.body),
+        Err(e) => println!("GET 실패: {}", e),
+    }
 
-    // // GET 에러
-    // match client.get("https://api.example.com/error").await {
-    //     Ok(response) => println!("GET 성공 ({}): {}", response.status, response.body),
-    //     Err(e) => println!("GET 실패: {}", e),
-    // }
+    // GET 에러
+    match client.get("https://api.example.com/error").await {
+        Ok(response) => println!("GET 성공 ({}): {}", response.status, response.body),
+        Err(e) => println!("GET 실패: {}", e),
+    }
 
-    // // POST 요청
-    // match client.post("https://api.example.com/users", r#"{"name": "Alice"}"#).await {
-    //     Ok(response) => println!("POST 성공 ({}): {}", response.status, response.body),
-    //     Err(e) => println!("POST 실패: {}", e),
-    // }
+    // POST 요청
+    match client
+        .post("https://api.example.com/users", r#"{"name": "Alice"}"#)
+        .await
+    {
+        Ok(response) => println!("POST 성공 ({}): {}", response.status, response.body),
+        Err(e) => println!("POST 실패: {}", e),
+    }
 
-    // // 병렬 요청
-    // let urls = vec![
-    //     String::from("https://api.example.com/users/1"),
-    //     String::from("https://api.example.com/users/2"),
-    //     String::from("https://api.example.com/error"),
-    //     String::from("https://api.example.com/users/3"),
-    // ];
+    // 병렬 요청
+    let urls = vec![
+        String::from("https://api.example.com/users/1"),
+        String::from("https://api.example.com/users/2"),
+        String::from("https://api.example.com/error"),
+        String::from("https://api.example.com/users/3"),
+    ];
 
-    // println!("\n병렬 요청 시작:");
-    // let start = std::time::Instant::now();
-    // let results = fetch_multiple(urls).await;
-    // println!("소요 시간: {:?}", start.elapsed());
+    println!("\n병렬 요청 시작:");
+    let start = std::time::Instant::now();
+    let results = fetch_multiple(urls).await;
+    println!("소요 시간: {:?}", start.elapsed());
 
-    // for (i, result) in results.iter().enumerate() {
-    //     match result {
-    //         Ok(response) => println!("  [{}] 성공 ({}): {}", i, response.status, response.body),
-    //         Err(e) => println!("  [{}] 실패: {}", i, e),
-    //     }
-    // }
+    for (i, result) in results.iter().enumerate() {
+        match result {
+            Ok(response) => println!("  [{}] 성공 ({}): {}", i, response.status, response.body),
+            Err(e) => println!("  [{}] 실패: {}", i, e),
+        }
+    }
 }

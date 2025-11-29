@@ -17,23 +17,36 @@
 use tokio::time::{Duration, sleep};
 
 // TODO: compute 함수를 구현하세요
+async fn compute(id: u32, duration_ms: u64) -> u32 {
+    sleep(Duration::from_millis(duration_ms)).await;
+    id * 2
+}
 
 // TODO: parallel_compute 함수를 구현하세요
+async fn parallel_compute(tasks: Vec<(u32, u64)>) -> Vec<u32> {
+    let mut handles = Vec::new();
+
+    for (id, duration_ms) in tasks {
+        let handle = tokio::spawn(async move { compute(id, duration_ms).await });
+        handles.push(handle);
+    }
+
+    let mut results = Vec::new();
+    for handle in handles {
+        results.push(handle.await.unwrap())
+    }
+
+    results
+}
 
 pub async fn run() {
     println!("=== 과제 1: tokio::spawn으로 병렬 처리 ===");
 
-    // let tasks = vec![
-    //     (1, 100),
-    //     (2, 200),
-    //     (3, 150),
-    //     (4, 50),
-    //     (5, 100),
-    // ];
+    let tasks = vec![(1, 100), (2, 200), (3, 150), (4, 50), (5, 100)];
 
-    // let start = std::time::Instant::now();
-    // let results = parallel_compute(tasks).await;
-    // println!("결과: {:?}", results);
-    // println!("소요 시간: {:?}", start.elapsed());
+    let start = std::time::Instant::now();
+    let results = parallel_compute(tasks).await;
+    println!("결과: {:?}", results);
+    println!("소요 시간: {:?}", start.elapsed());
     // 병렬 실행이므로 약 200ms (가장 긴 작업) 소요
 }

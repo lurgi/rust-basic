@@ -29,32 +29,82 @@
 use tokio::time::{Duration, sleep};
 
 // TODO: unreliable_operation 함수를 구현하세요
+async fn unreliable_operation(id: u32, fail_count: &mut u32) -> Result<String, String> {
+    sleep(Duration::from_millis(50)).await;
+
+    match fail_count {
+        fail_count if *fail_count < 2 => {
+            *fail_count += 1;
+            Err("fail".to_string())
+        }
+        _ => Ok("success".to_string()),
+    }
+}
 
 // TODO: retry_operation 함수를 구현하세요
-// 힌트: loop { match operation().await { ... } }
+async fn retry_operation<F, Fut, T, E>(
+    mut operation: F,
+    max_retries: u32,
+    delay_ms: u64,
+) -> Result<T, E>
+where
+    F: FnMut() -> Fut,
+    Fut: std::future::Future<Output = Result<T, E>>,
+{
+    let mut retries = 0;
+
+    loop {
+        match operation().await {
+            Ok(result) => return Ok(result),
+            Err(e) => {
+                if retries >= max_retries {
+                    return Err(e);
+                }
+                retries += 1;
+                sleep(Duration::from_millis(delay_ms)).await;
+            }
+        }
+    }
+}
 
 // TODO: process_with_retry 함수를 구현하세요
+async fn process_with_retry(id: u32) -> Result<String, String> {
+    let mut fail_count = 0u32;
+    let max_retries = 3;
+    let delay_ms = 100;
+    let mut last_error = None;
+
+    for _ in 0..=max_retries {
+        match unreliable_operation(id, &mut fail_count).await {
+            Ok(result) => return Ok(result),
+            Err(e) => {
+                last_error = Some(e);
+                sleep(Duration::from_millis(delay_ms)).await;
+            }
+        }
+    }
+
+    Err(last_error.unwrap())
+}
 
 pub async fn run() {
     println!("=== 과제 4: 재시도 로직 구현 ===");
 
-    // match process_with_retry(1).await {
-    //     Ok(result) => println!("최종 성공: {}", result),
-    //     Err(e) => println!("최종 실패: {}", e),
-    // }
+    match process_with_retry(1).await {
+        Ok(result) => println!("최종 성공: {}", result),
+        Err(e) => println!("최종 실패: {}", e),
+    }
 
-    // // 여러 작업을 병렬로 재시도
-    // let mut handles = vec![];
-    // for i in 1..=3 {
-    //     handles.push(tokio::spawn(async move {
-    //         process_with_retry(i).await
-    //     }));
-    // }
+    // 여러 작업을 병렬로 재시도
+    let mut handles = vec![];
+    for i in 1..=3 {
+        handles.push(tokio::spawn(async move { process_with_retry(i).await }));
+    }
 
-    // for (i, handle) in handles.into_iter().enumerate() {
-    //     match handle.await.unwrap() {
-    //         Ok(result) => println!("작업 {} 성공: {}", i + 1, result),
-    //         Err(e) => println!("작업 {} 실패: {}", i + 1, e),
-    //     }
-    // }
+    for (i, handle) in handles.into_iter().enumerate() {
+        match handle.await.unwrap() {
+            Ok(result) => println!("작업 {} 성공: {}", i + 1, result),
+            Err(e) => println!("작업 {} 실패: {}", i + 1, e),
+        }
+    }
 }
